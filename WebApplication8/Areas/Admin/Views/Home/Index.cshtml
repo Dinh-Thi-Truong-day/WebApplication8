@@ -1,0 +1,206 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trang Admin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        #header {
+            background-color: #3498db; /* Màu xanh dương */
+            color: #fff;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #menu {
+            background-color: #3498db; /* Màu xanh dương */
+            color: #fff; /* Màu chữ trắng */
+            text-align: left;
+            padding: 10px;
+            width: 250px;
+            position: fixed;
+            height: 100%;
+        }
+
+            #menu a {
+                display: block;
+                color: #fff;
+                text-decoration: none;
+                margin: 10px 0;
+                padding: 10px 20px;
+            }
+
+                #menu a:hover {
+                    background-color: #2980b9; /* Màu xanh dương nhạt khi di chuột qua */
+                }
+
+        #content {
+            margin-left: 270px;
+            padding: 20px;
+            background-color: #fff;
+        }
+
+        #header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        #content h2 {
+            color: #3498db; /* Màu xanh dương */
+        }
+
+        #content p {
+            font-size: 16px;
+        }
+
+        .button {
+            background-color: #3498db; /* Màu xanh dương */
+            color: #fff; /* Màu chữ trắng */
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* CSS để ẩn nút "Thêm Sản Phẩm" và "Thêm Người Dùng" khi không ở Trang chủ */
+        #danhsachsanpham .button,
+        #danhsachnguoidung .button,
+        #Admin.button {
+            display: none; /* Ẩn nút khi không ở Trang chủ hoặc khi ở các tab khác */
+        }
+    </style>
+</head>
+<body>
+    <div id="menu">
+        <a href="#trangchu">Trang chủ</a>
+        <a href="#danhsachsanpham">Danh sách sản phẩm</a>
+        <a href="#danhsachnguoidung">Danh sách người dùng</a>
+        <a href="#admin">Admin</a>
+    </div>
+    <div id="content">
+        <div id="header">
+            <h1>Trang quản lý Admin</h1>
+        </div>
+        <section id="trangchu">
+            <h2 style="color: #3498db;">Trang chủ</h2>
+            <p>Đây là trang chủ của trang admin.</p>
+            <button class="button" onclick="themSanPham()">Thêm Sản Phẩm</button>
+            <button class="button" onclick="themNguoiDung()">Thêm Người Dùng</button>
+        </section>
+        <section id="danhsachsanpham" style="display: none;">
+            <h2>Danh sách sản phẩm</h2>
+            <div id="danhSachSanPham">
+                <!-- Danh sách sản phẩm sẽ được hiển thị ở đây -->
+            </div>
+        </section>
+        <section id="danhsachnguoidung" style="display: none;">
+            <h2>Danh sách người dùng</h2>
+            <!-- Biểu đồ cột thống kê số lượng người dùng hàng tháng -->
+            <canvas id="monthlyUserChart" width="400" height="200"></canvas>
+
+            <!-- Biểu đồ tròn thống kê mức độ tương tác của người dùng -->
+            <canvas id="userEngagementChart" width="400" height="200"></canvas>
+        </section>
+        <section id="admin" style="display: none;">
+            <h2>Admin</h2>
+            <p>Tên admin: Trương Đình Thi</p>
+            <p>SDT: 0898418858</p>
+            <p>Địa chỉ: Hưng Yên</p>
+        </section>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // JavaScript để hiển thị nội dung khi nhấp vào liên kết
+        const sections = ['trangchu', 'danhsachsanpham', 'danhsachnguoidung', 'admin'];
+        sections.forEach(sectionId => {
+            const link = document.querySelector(`a[href="#${sectionId}"]`);
+            link.addEventListener('click', () => {
+                sections.forEach(id => {
+                    const element = document.getElementById(id);
+                    element.style.display = 'none';
+                });
+                document.getElementById(sectionId).style.display = 'block';
+
+                // Ẩn/hiện nút "Thêm Sản Phẩm" và "Thêm Người Dùng" dựa trên tab hiện tại
+                if (sectionId === 'trangchu') {
+                    document.querySelector("#trangchu .button").style.display = 'inline-block';
+                } else {
+                    document.querySelector("#trangchu .button").style.display = 'none';
+                }
+            });
+        });
+
+        // JavaScript để thêm sản phẩm
+        function themSanPham() {
+            // Lấy thông tin sản phẩm từ người dùng (ví dụ: tên sản phẩm, giá, mô tả, vv.)
+            var tenSanPham = prompt("Nhập tên sản phẩm:");
+            var giaSanPham = prompt("Nhập giá sản phẩm:");
+            var moTaSanPham = prompt("Nhập mô tả sản phẩm:");
+
+            // Tạo một thẻ HTML mới để hiển thị sản phẩm
+            var newProduct = document.createElement("div");
+            newProduct.innerHTML = `<h3>${tenSanPham}</h3><p>Giá: ${giaSanPham}</p><p>${moTaSanPham}</p>`;
+
+            // Thêm sản phẩm vào danh sách sản phẩm
+            var danhSachSanPham = document.getElementById("danhSachSanPham");
+            danhSachSanPham.appendChild(newProduct);
+        }
+
+        // JavaScript để thêm người dùng
+        function themNguoiDung() {
+            // Lấy thông tin người dùng từ người dùng (ví dụ: tên người dùng, email, vv.)
+            var tenNguoiDung = prompt("Nhập tên người dùng:");
+            var emailNguoiDung = prompt("Nhập email người dùng:");
+
+            // Tạo một thẻ HTML mới để hiển thị người dùng
+            var newUser = document.createElement("div");
+            newUser.innerHTML = `<h3>${tenNguoiDung}</h3><p>Email: ${emailNguoiDung}</p>`;
+
+            // Thêm người dùng vào danh sách người dùng
+            var danhSachNguoiDung = document.getElementById("danhSachNguoiDung");
+            danhSachNguoiDung.appendChild(newUser);
+        }
+
+        // JavaScript để tạo biểu đồ
+        var monthlyUserChart = new Chart(document.getElementById('monthlyUserChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4', 'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8', 'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'],
+                datasets: [{
+                    label: 'Thống kê số lượng người dùng hàng tháng',
+                    data: [100, 120, 150, 130, 180, 200, 220, 250, 240, 220, 180, 160],
+                    backgroundColor: 'rgba(52, 152, 219, 0.6)'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        var userEngagementChart = new Chart(document.getElementById('userEngagementChart').getContext('2d'), {
+            type: 'pie',
+            data: {
+                labels: ['Người dùng thường xuyên', 'Người dùng cơ bản'],
+                datasets: [{
+                    data: [60, 40],
+                    backgroundColor: ['rgba(46, 204, 113, 0.6)', 'rgba(231, 76, 60, 0.6)']
+                }]
+            }
+        });
+    </script>
+</body>
+</html>
